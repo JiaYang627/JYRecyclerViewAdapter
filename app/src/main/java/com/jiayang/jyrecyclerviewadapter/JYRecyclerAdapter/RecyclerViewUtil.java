@@ -1,0 +1,100 @@
+package com.jiayang.jyrecyclerviewadapter.JYRecyclerAdapter;
+
+import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
+
+/**
+ * Created by Administrator on 2017/3/7.
+ */
+
+public class RecyclerViewUtil {
+
+
+    private static JYLoadMoreWrapper sLoadMoreWrapper;
+
+    public static void setBaseCommonRecyclerView(Context context, final RecyclerView refreshView,
+                                                 final CommonAdapter adapter,
+                                                 SwipeRefreshLayout swipeRefreshLayout,
+                                                 LinearLayoutManager linearLayoutManager, final RefreshListener listener){
+//        PtrClassicDefaultHeader header = new PtrClassicDefaultHeader(context);
+
+        sLoadMoreWrapper = new JYLoadMoreWrapper(adapter);
+
+
+        refreshView.setLayoutManager(linearLayoutManager);
+
+        refreshView.setAdapter(sLoadMoreWrapper);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listener.refresh();
+            }
+        });
+
+        refreshView.addOnScrollListener(new JYEndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                sLoadMoreWrapper.setLoadState(sLoadMoreWrapper.LOADING);
+                listener.loadMore();
+            }
+        });
+
+    }
+
+
+    /**
+     * 单列
+     * @param context
+     * @param refreshView
+     * @param adapter
+     * @param swipeRefreshLayout
+     * @param listener
+     */
+    public static void setCommonRecyclerView(Context context, RecyclerView refreshView, CommonAdapter adapter, SwipeRefreshLayout swipeRefreshLayout, final RefreshListener listener){
+        setBaseCommonRecyclerView(context, refreshView,
+                adapter,
+                swipeRefreshLayout,
+                new LinearLayoutManager(context),
+                listener);
+    }
+
+
+    /**
+     * 双列
+     * @param context
+     * @param refreshView
+     * @param adapter
+     * @param swipeRefreshLayout
+     * @param listener
+     */
+    public static void setCommonRecyclerView2(Context context, RecyclerView refreshView, CommonAdapter adapter,SwipeRefreshLayout swipeRefreshLayout, final RefreshListener listener){
+        setBaseCommonRecyclerView(context, refreshView,
+                adapter,
+                swipeRefreshLayout,
+                new GridLayoutManager(context, 2 ),
+                listener);
+    }
+
+
+    /**
+     * 设置脚布局的状态
+     * @param loadState
+     */
+    public static void setLoadState(int loadState) {
+        sLoadMoreWrapper.setLoadState(loadState);
+    }
+
+    public static void notifyWrapper() {
+        sLoadMoreWrapper.notifyDataSetChanged();
+    }
+
+    public interface RefreshListener{
+        void refresh();
+        void loadMore();
+    }
+}
