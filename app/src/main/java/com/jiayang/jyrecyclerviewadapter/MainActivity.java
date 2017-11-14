@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> dataList = new ArrayList<>();
     private CommonAdapter<String> mAdapter;
+    private View mHeadView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initAdapter() {
-        mAdapter = new CommonAdapter<String>(null, R.layout.adapter_recyclerview, this) {
+        mAdapter = new CommonAdapter<String>(null, R.layout.adapter_recyclerview, this, true) {
 
 
             @Override
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.setOnClickListener(R.id.tv_item, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(MainActivity.this, "点击控件："+strings, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "点击控件：" + strings, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new CommonAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                Toast.makeText(MainActivity.this, "点击条目："+mAdapter.getDatas().get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "点击条目：" + mAdapter.getDatas().get(position), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -83,11 +84,13 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        mHeadView = getLayoutInflater().inflate(R.layout.item_main_head, null);
     }
 
     private void initRecyclerView() {
 
-        RecyclerViewUtil.setCommonRecyclerView(this, mRecyclerView, mAdapter, mSwipeRefreshLayout, new RecyclerViewUtil.RefreshListener() {
+        RecyclerViewUtil.setCommonRecyclerView(this, mRecyclerView, mAdapter, true, mHeadView, mSwipeRefreshLayout, new RecyclerViewUtil.RefreshListener() {
             @Override
             public void refresh() {
                 // 下拉刷新

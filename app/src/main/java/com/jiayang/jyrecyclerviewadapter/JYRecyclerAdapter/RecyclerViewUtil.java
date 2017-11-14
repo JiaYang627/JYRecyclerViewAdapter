@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 
 /**
@@ -17,12 +18,14 @@ public class RecyclerViewUtil {
     private static JYLoadMoreWrapper sLoadMoreWrapper;
 
     public static void setBaseCommonRecyclerView(Context context, final RecyclerView refreshView,
-                                                 final CommonAdapter adapter,
+                                                 final RecyclerView.Adapter adapter,
+                                                 boolean hasHead ,
+                                                 View headView,
                                                  SwipeRefreshLayout swipeRefreshLayout,
                                                  LinearLayoutManager linearLayoutManager, final RefreshListener listener){
 //        PtrClassicDefaultHeader header = new PtrClassicDefaultHeader(context);
 
-        sLoadMoreWrapper = new JYLoadMoreWrapper(adapter);
+        sLoadMoreWrapper = new JYLoadMoreWrapper(adapter ,hasHead ,headView);
 
 
         refreshView.setLayoutManager(linearLayoutManager);
@@ -55,9 +58,11 @@ public class RecyclerViewUtil {
      * @param swipeRefreshLayout
      * @param listener
      */
-    public static void setCommonRecyclerView(Context context, RecyclerView refreshView, CommonAdapter adapter, SwipeRefreshLayout swipeRefreshLayout, final RefreshListener listener){
+    public static void setCommonRecyclerView(Context context, RecyclerView refreshView, CommonAdapter adapter, boolean hasHead , View headView, SwipeRefreshLayout swipeRefreshLayout, final RefreshListener listener){
         setBaseCommonRecyclerView(context, refreshView,
                 adapter,
+                hasHead,
+                headView,
                 swipeRefreshLayout,
                 new LinearLayoutManager(context),
                 listener);
@@ -72,9 +77,11 @@ public class RecyclerViewUtil {
      * @param swipeRefreshLayout
      * @param listener
      */
-    public static void setCommonRecyclerView2(Context context, RecyclerView refreshView, CommonAdapter adapter,SwipeRefreshLayout swipeRefreshLayout, final RefreshListener listener){
+    public static void setCommonRecyclerView2(Context context, RecyclerView refreshView, CommonAdapter adapter,boolean hasHead , View headView,SwipeRefreshLayout swipeRefreshLayout, final RefreshListener listener){
         setBaseCommonRecyclerView(context, refreshView,
                 adapter,
+                hasHead,
+                headView,
                 swipeRefreshLayout,
                 new GridLayoutManager(context, 2 ),
                 listener);

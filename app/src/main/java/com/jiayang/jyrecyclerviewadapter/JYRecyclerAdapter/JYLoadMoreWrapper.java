@@ -21,11 +21,14 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
     private CommonAdapter adapter;
+    private boolean isHas;
+    private View headView;
 
     // 普通布局
     private final int TYPE_ITEM = 1;
     // 脚布局
     private final int TYPE_FOOTER = 2;
+    private final int TYPE_HEAD = 3;
     // 当前加载状态，默认为加载完成
     private int loadState = 2;
     // 正在加载
@@ -35,8 +38,10 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
     // 加载到底
     public static final int LOADING_END = 3;
 
-    public JYLoadMoreWrapper(CommonAdapter adapter) {
-        this.adapter = adapter;
+    public JYLoadMoreWrapper(RecyclerView.Adapter adapter, boolean hasHead, View headView) {
+        this.adapter = (CommonAdapter) adapter;
+        this.isHas = hasHead;
+        this.headView = headView;
     }
 
 
@@ -47,6 +52,9 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.layout_refresh_footer, parent, false);
             return new FootViewHolder(view);
+        } else if (viewType == TYPE_HEAD) {
+
+            return new HeadViewHolder(headView);
         } else {
             return adapter.onCreateViewHolder(parent, viewType);
         }
@@ -79,20 +87,28 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
                 default:
                     break;
             }
+        } else if (holder instanceof HeadViewHolder) {
+
         } else {
-            adapter.onBindViewHolder((ViewHolder) holder, position);
+            adapter.onBindViewHolder((ViewHolder) holder,  isHas ? position -1 : position);
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return adapter.getItemCount() + 1;
+        return isHas ? adapter.getItemCount() + 2 : adapter.getItemCount() + 1;
     }
+
     @Override
     public int getItemViewType(int position) {
+
+        if (isHas && position == 0) {
+            return TYPE_HEAD;
+        }
+
         // 最后一个item设置为FooterView
-        if (position + 1 == getItemCount()) {
+        if ( position + 1 == getItemCount()) {
             return TYPE_FOOTER;
         } else {
             return TYPE_ITEM;
@@ -127,6 +143,13 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
             pbLoading = (ProgressBar) itemView.findViewById(R.id.pb_loading);
             tvLoading = (TextView) itemView.findViewById(R.id.tv_loading);
             llEnd = (LinearLayout) itemView.findViewById(R.id.ll_end);
+        }
+    }
+
+
+    private class HeadViewHolder extends RecyclerView.ViewHolder {
+        public HeadViewHolder(View itemView) {
+            super(itemView);
         }
     }
 

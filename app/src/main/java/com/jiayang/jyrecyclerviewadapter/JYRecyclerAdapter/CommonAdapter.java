@@ -20,16 +20,18 @@ import java.util.List;
 public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
     private final ItemViewDelegateManager mItemViewDelegateManager;
     protected Context mContext;
+    protected boolean hasHead;
     protected int mLayoutId;
     protected List<T> mDatas;
     protected LayoutInflater mInflater;
     protected OnItemClickListener mOnItemClickListener;
 
 
-    public CommonAdapter(List<T> datas ,int layoutId ,Context context) {
+    public CommonAdapter(List<T> datas, int layoutId, Context context, boolean hasHead) {
         this.mDatas = datas;
         this.mLayoutId = layoutId;
         this.mContext = context;
+        this.hasHead = hasHead;
         mItemViewDelegateManager = new ItemViewDelegateManager();
 
         addItemViewDelegate(new ItemViewDelegate<T>() {
@@ -51,14 +53,13 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
     }
 
 
-
     protected abstract void convert(ViewHolder holder, T t, int position);
 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder holder = ViewHolder.createViewHolder(mContext, parent, mLayoutId);
-        onViewHolderCreated(holder,holder.getConvertView());
+        onViewHolderCreated(holder, holder.getConvertView());
         setListener(parent, holder, viewType);
         return holder;
     }
@@ -66,17 +67,15 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        mItemViewDelegateManager.convert(holder, mDatas.get(position) ,holder.getAdapterPosition());
+        mItemViewDelegateManager.convert(holder, mDatas.get(position ), holder.getAdapterPosition());
     }
-
 
 
     @Override
     public int getItemCount() {
-        int itemCount = mDatas.size();
+        int itemCount = mDatas.size() ;
         return itemCount;
     }
-
 
 
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
@@ -85,8 +84,8 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
             @Override
             public void onClick(View v) {
                 if (mOnItemClickListener != null) {
-                    int position = viewHolder.getAdapterPosition();
-                    mOnItemClickListener.onItemClick(v, viewHolder , position);
+                    int position = viewHolder.getAdapterPosition() - (hasHead ? 1 : 0);
+                    mOnItemClickListener.onItemClick(v, viewHolder, position);
                 }
             }
         });
@@ -95,13 +94,14 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
             @Override
             public boolean onLongClick(View v) {
                 if (mOnItemClickListener != null) {
-                    int position = viewHolder.getAdapterPosition();
+                    int position = viewHolder.getAdapterPosition() - (hasHead ? 1 : 0);
                     return mOnItemClickListener.onItemLongClick(v, viewHolder, position);
                 }
                 return false;
             }
         });
     }
+
     public interface OnItemClickListener {
         void onItemClick(View view, RecyclerView.ViewHolder holder, int position);
 
@@ -116,7 +116,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
         return true;
     }
 
-    public void onViewHolderCreated(ViewHolder holder,View itemView){
+    public void onViewHolderCreated(ViewHolder holder, View itemView) {
 
     }
 
@@ -124,36 +124,38 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
         mItemViewDelegateManager.addDelegate(itemViewDelegate);
     }
 
-    public void setDatas(List<T> datas){
+    public void setDatas(List<T> datas) {
         this.mDatas = datas;
         notifyDataSetChanged();
     }
-    public void addDatas(List<T> datas){
+
+    public void addDatas(List<T> datas) {
         mDatas.addAll(datas);
         notifyDataSetChanged();
     }
-    public void addData(T data){
+
+    public void addData(T data) {
         mDatas.add(data);
         notifyDataSetChanged();
     }
 
-    public void insertData(T data, int position){
+    public void insertData(T data, int position) {
         mDatas.add(position, data);
         notifyDataSetChanged();
     }
 
-    public void removeData(int positon){
+    public void removeData(int positon) {
         mDatas.remove(positon);
         notifyDataSetChanged();
     }
 
-    public void changeData(T data, int position){
+    public void changeData(T data, int position) {
         mDatas.remove(position);
         mDatas.add(position, data);
         notifyDataSetChanged();
     }
 
-    public void clear(){
+    public void clear() {
         mDatas.clear();
         notifyDataSetChanged();
     }
