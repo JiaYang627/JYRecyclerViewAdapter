@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jiayang.jyrecyclerviewadapter.JYRecyclerAdapter.CommonAdapter;
@@ -90,13 +91,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
 
-        RecyclerViewUtil.setCommonRecyclerView(this, mRecyclerView, mAdapter, true, mHeadView, mSwipeRefreshLayout, new RecyclerViewUtil.RefreshListener() {
+        RecyclerViewUtil.setCommonRecyclerView2(this, mRecyclerView, mAdapter, true, mHeadView, mSwipeRefreshLayout, new RecyclerViewUtil.RefreshListener() {
             @Override
             public void refresh() {
                 // 下拉刷新
 
                 dataList.clear();
                 initData();
+                addHeadView();
                 RecyclerViewUtil.notifyWrapper();   // 刷新Wrapper状态
                 mSwipeRefreshLayout.setRefreshing(false);
                 mAdapter.setDatas(dataList);
@@ -126,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void addHeadView() {
+        ((TextView)mHeadView.findViewById(R.id.textViewHead)).setText("这是头布局刷新改变的");
     }
 
     private void init() {

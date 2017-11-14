@@ -2,6 +2,7 @@ package com.jiayang.jyrecyclerviewadapter.JYRecyclerAdapter;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int TYPE_ITEM = 1;
     // 脚布局
     private final int TYPE_FOOTER = 2;
+    // 头布局
     private final int TYPE_HEAD = 3;
     // 当前加载状态，默认为加载完成
     private int loadState = 2;
@@ -89,6 +91,9 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         } else if (holder instanceof HeadViewHolder) {
 
+            // 使头布局宽度填充
+            holder.itemView.setLayoutParams(new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         } else {
             adapter.onBindViewHolder((ViewHolder) holder,  isHas ? position -1 : position);
         }
@@ -125,10 +130,12 @@ public class JYLoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public int getSpanSize(int position) {
                     // 如果当前是footer的位置，那么该item占据2个单元格，正常情况下占据1个单元格
-                    return getItemViewType(position) == TYPE_FOOTER ? gridManager.getSpanCount() : 1;
+                    return getItemViewType(position) == TYPE_FOOTER ? gridManager.getSpanCount() : getItemViewType(position) == TYPE_HEAD ? gridManager.getSpanCount() :1;
                 }
             });
         }
+
+
     }
 
 
