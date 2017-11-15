@@ -32,13 +32,16 @@ public class RecyclerViewUtil {
 
         refreshView.setAdapter(sLoadMoreWrapper);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                listener.refresh();
-            }
-        });
+        if (swipeRefreshLayout != null) {
 
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    notifyWrapper();   // 刷新Wrapper状态
+                    listener.refresh();
+                }
+            });
+        }
         refreshView.addOnScrollListener(new JYEndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {

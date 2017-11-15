@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 dataList.clear();
                 initData();
                 addHeadView();
-                RecyclerViewUtil.notifyWrapper();   // 刷新Wrapper状态
+
                 mSwipeRefreshLayout.setRefreshing(false);
                 mAdapter.setDatas(dataList);
             }

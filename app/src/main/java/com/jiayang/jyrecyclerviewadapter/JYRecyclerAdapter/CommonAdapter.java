@@ -11,6 +11,7 @@ import com.jiayang.jyrecyclerviewadapter.JYRecyclerAdapter.base.ItemViewDelegate
 import com.jiayang.jyrecyclerviewadapter.JYRecyclerAdapter.base.ItemViewDelegateManager;
 import com.jiayang.jyrecyclerviewadapter.JYRecyclerAdapter.base.ViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,7 +29,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
 
 
     public CommonAdapter(List<T> datas, int layoutId, Context context, boolean hasHead) {
-        this.mDatas = datas;
+        this.mDatas = datas == null ? new ArrayList<T>() : datas;
         this.mLayoutId = layoutId;
         this.mContext = context;
         this.hasHead = hasHead;
