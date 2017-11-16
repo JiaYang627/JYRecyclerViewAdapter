@@ -37,7 +37,7 @@ public class RecyclerViewUtil {
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    notifyWrapper();   // 刷新Wrapper状态
+
                     listener.refresh();
                 }
             });
