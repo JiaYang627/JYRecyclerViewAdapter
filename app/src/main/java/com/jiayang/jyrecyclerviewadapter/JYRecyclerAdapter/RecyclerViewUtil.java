@@ -21,7 +21,7 @@ public class RecyclerViewUtil {
                                                  final RecyclerView.Adapter adapter,
                                                  boolean hasHead ,
                                                  View headView,
-                                                 SwipeRefreshLayout swipeRefreshLayout,
+                                                 final SwipeRefreshLayout swipeRefreshLayout,
                                                  LinearLayoutManager linearLayoutManager, final RefreshListener listener){
 //        PtrClassicDefaultHeader header = new PtrClassicDefaultHeader(context);
 
@@ -37,15 +37,16 @@ public class RecyclerViewUtil {
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-
+                    notifyWrapper();   // 刷新Wrapper状态 防止 上滑加载更多后 脚布局状态在上滑回调中未及时更新过来
                     listener.refresh();
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             });
         }
         refreshView.addOnScrollListener(new JYEndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {
-                sLoadMoreWrapper.setLoadState(sLoadMoreWrapper.LOADING);
+                sLoadMoreWrapper.setLoadState(JYLoadMoreWrapper.LOADING);
                 listener.loadMore();
             }
         });

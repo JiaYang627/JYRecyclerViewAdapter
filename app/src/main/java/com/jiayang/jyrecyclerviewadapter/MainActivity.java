@@ -1,8 +1,8 @@
 package com.jiayang.jyrecyclerviewadapter;
 
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.jiayang.jyrecyclerviewadapter.JYRecyclerAdapter.RecyclerViewUtil.notifyWrapper;
 import static com.jiayang.jyrecyclerviewadapter.R.id.recyclerView;
 
 public class MainActivity extends AppCompatActivity {
@@ -100,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 dataList.clear();
                 initData();
                 addHeadView();
-                notifyWrapper();   // 刷新Wrapper状态
-                mSwipeRefreshLayout.setRefreshing(false);
+
                 mAdapter.setDatas(dataList);
             }
 
